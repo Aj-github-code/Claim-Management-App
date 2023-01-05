@@ -1,11 +1,26 @@
 {
   "expo": {
-    "name": "claim-management-app",
+    "name": "Claim Management App",
     "slug": "claim-management-app",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
+      ]
+    ],
+    "android": {
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.claimmanagement.primarykeytech"
+    }
   },
-  "name": "claim-management-app"
+  "name": "Claim Management App"
 }

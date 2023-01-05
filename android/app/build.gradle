@@ -187,6 +187,16 @@ android {
             into("$buildDir/react-ndk/exported")
         }
         afterEvaluate {
+            publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'mygroup'
+                artifactId = 'common'
+                version = '1.0.0'
+                artifact(bundleReleaseAar)
+            }
+        }
+    }
             // If you wish to add a custom TurboModule or component locally,
             // you should uncomment this line.
             // preBuild.dependsOn("generateCodegenArtifactsFromSchema")
