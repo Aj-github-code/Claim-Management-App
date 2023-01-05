@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "claim-management-app",
+    "slug": "claim-management-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "claim-management-app"
+}
