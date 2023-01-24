@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { View, Image, BackHandler, Linking, Text, Alert  } from 'react-native';
+import { View, Image, BackHandler, Linking, Text, Alert , ToastAndroid } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { API_CONSTANTS } from '../../assets/config/constants';
 import Button from '../../components/Button';
@@ -15,7 +15,7 @@ import { colors } from '../../assets/config/colors';
 import { getFontStyles } from '../../services/utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import Toast from 'react-native-toast-message';
+// import ToastAndroid from 'react-native-ToastAndroid-message';
 export default class Login extends React.Component {
 
   constructor(props) {
@@ -70,7 +70,26 @@ export default class Login extends React.Component {
 
   handleLogin() {
 
-  
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if(this.state.username === ""){
+      console.log('PLease Enter Username.');
+      ToastAndroid.show('PLease Enter Username.', ToastAndroid.SHORT);
+      return false;
+    } else if (reg.test(this.state.username) === false) {
+      console.log('Invalid Username! PLease Enter Valid Username.')
+      ToastAndroid.show('Invalid Username! PLease Enter Valid Username.', ToastAndroid.SHORT);
+      return false;
+    }
+
+    if(this.state.password === "" ){
+      ToastAndroid.show('Invalid Password! PLease Enter Valid Password.', ToastAndroid.SHORT);
+      return false;
+    } else if(this.state.password.length < 5) {
+      ToastAndroid.show('Password has to be 5 characters long', ToastAndroid.SHORT);
+      return false;
+    }
+ 
+    console.log('Invalid Username! ')
     if (this.state.username && this.state.password) {
       GLOBAL.loadingVisible.setState({ loading: true });
       const request = { email: this.state.username, password: this.state.password }
@@ -83,24 +102,27 @@ export default class Login extends React.Component {
           // this.storageCtrl.setItem('id',response.data.id);
           // this.storageCtrl.setItem('name',response.data.name);
           // this.storageCtrl.setItem('role',response.data.roles);
-          Alert.alert('Login Success',response.message)
+          ToastAndroid.show('Login Success: '+response.message, ToastAndroid.SHORT)
           this.storageCtrl.setItem('user_details', JSON.stringify(response.data));
           GLOBAL.userDetails = response.data.data;
           GLOBAL.loadingVisible.setState({ loading: false });
           this.props.navigation.push('HomeTabs');
         } else {
+          ToastAndroid.show('Login Error: '+response.message, ToastAndroid.SHORT);
          Alert.alert('Login Error',response.message)
           GLOBAL.loadingVisible.setState({ loading: false });
 
         }
       })
     } else {
-      Toast.show('Please enter Username & Password.');
+      ToastAndroid.show('Please enter Username & Password.', ToastAndroid.SHORT);
     }
   }
   // makeCall(phoneNumber) {
   //   Linking.openURL(`tel:${phoneNumber}`)
   // }
+
+
   render() {
  
 
