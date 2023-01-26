@@ -7,6 +7,11 @@ import { getFontStyles, Utils } from '../services/utils';
 import * as GLOBAL from '../assets/config/constants';
 import { API_CONSTANTS } from '../assets/config/constants';
 import moment from 'moment';
+
+import { userDetails } from '../assets/config/constants';
+
+import ListEmptyComponent from '../components/ListEmptyComponent';
+
 export default class InspectionList extends React.Component{
     constructor(props) {
         super(props);
@@ -136,103 +141,83 @@ export default class InspectionList extends React.Component{
        console.log('Naviagtion', this.props)
   return (
     <View style={[styles.container]}>
-        <Header goBack={() => { this.props.navigation.pop() }}  text={'Inspection List'} rightBtnIcon='bell' rightBtnIcon2='search' bckBtn={true} rightImage={true} />
+        <Header goBack={() => { this.props.navigation.navigate('Dashboard') }}  
+        text={'Inspection List'} 
+        rightBtnIcon='bell' 
+        rightBtnPress={() => { this.props.navigation.navigate('notifications') }} 
+        rightBtnIcon2='search' 
+        bckBtn={true} 
+        rightImage={true} />
         
 
         <FlatList
-        //  contentContainerStyle={{flexGrow:1, justifyContent: 'center',alignItems: 'center', margin:8, borderRadius: 10,}}
           data={this.state.claimLists}
-          // renderItem={item => this._renderOrderList(item)}
-          renderItem={(item ,key) => {   console.log(item);return (
-          
-            <TouchableOpacity style={[styles.row]} title="View Profile" onPress= {()=>  this.props.navigation.navigate("New Vehicle Detail",{params:item.item})}>
+          renderItem={(item ,key) => {   
+            return (
+              <TouchableOpacity style={[styles.row]} title="View Profile" onPress= {()=>  this.props.navigation.navigate("New Vehicle Detail",{params:item.item})}>
                 <View style={[styles.details]}>
-            <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Claim No</Text> 
-                <Text>:&nbsp;&nbsp;</Text>  
-                <Text >{item.item.claim_code}</Text>
-             </View>
-             <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Reg No</Text> 
-                <Text >:&nbsp;&nbsp;</Text>  
-                <Text >{item.item.vehicle_registration_no}</Text>
-             </View>
-             <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Work Shop</Text> 
-                <Text >:&nbsp;&nbsp;</Text>  
-                <Text >Nano</Text>
-             </View>
-             <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Location</Text> 
-                <Text >:&nbsp;&nbsp;</Text>  
-                <Text >{item.item.place_of_accident}</Text>
-             </View>
-              {this.props.status === '2'?
-              <>
-                <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                  <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Status</Text> 
-                  <Text >:&nbsp;&nbsp;</Text>  
-                  <Text style={[{color:"#FFC804"}]} >InProgress</Text>
-                </View>
-                  <View style={[{position:'absolute',top:0, right:20, padding:5, paddingLeft:15,borderBottomLeftRadius:10,borderTopLeftRadius:10, backgroundColor:"#FFA6A6", width:"auto"}]}><Text>{secondsToTime(item.item.created_at).time}</Text></View>
-                  </>
-              :
-                this.props.status === '4' ?
                   <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
-                    <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Status</Text> 
-                    <Text >:&nbsp;&nbsp;</Text>  
-                    <Text style={[{color:"#189333"}]} >Completed</Text>
+                    <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Claim No</Text> 
+                    <Text>:&nbsp;&nbsp;</Text>  
+                    <Text >{item.item.claim_code}</Text>
                   </View>
-                :
-                    <View style={[{position:'absolute',top:0, right:20, padding:5, paddingLeft:15,borderBottomLeftRadius:10,borderTopLeftRadius:10, backgroundColor:secondsToTime(item.item.created_at).color, width:"auto"}]}><Text>{secondsToTime(item.item.created_at).time}</Text></View>
-              }
-             </View>
-            {/* 
-                <Text >Claim No:  {item.item.claim_code}</Text>
-                <Text>Reg No:  {item.item.vehicle_registration_no}</Text>
-                <Text>:  Nano</Text>
-                <Text>:   {item.item.place_of_accident}</Text>
-               
-             */}
-        {/* </View>
-        <View style={[]}> */}
-        </TouchableOpacity>
-            ) }}
-            keyExtractor={(item, index) => index.toString()}
-            // ListEmptyComponent={this._listEmptyComponent}
-            showsVerticalScrollIndicator={false}
-            refreshing={this.state.refreshing}
-            onRefresh={this.handleRefreshFromTop}
-            onEndReached={this.handleLoadMoreFromBottom}
-            ListFooterComponent={this.renderLoader}
-          />
-               <View style={[{height:60}]}></View>
-        {/* <TouchableOpacity style={[styles.row, styles.elevation]} title="View Profile" onPress= {()=>  this.props.navigation.navigate("New Vehicle Detail")}>
-            <View style={[styles.details]}>
-                <Text>Claim No:  Clm 12345</Text>
-                <Text>Reg No:  MH 06 98</Text>
-                <Text>Work Shop:  Nano</Text>
-                <Text>Location:   Western Express</Text>
-                <View style={[{position:'absolute',top:10, right:'-118%', backgroundColor:'lightgreen', width:50}]}><Text>10min</Text></View>
-            </View>
-        </TouchableOpacity>
-         
-            <TouchableOpacity style={[styles.row, styles.elevation]} title="View Profile" onPress= {()=>  this.props.navigation.navigate("New Vehicle Detail")}>
-                <View style={[styles.details]}>
-                    <Text>Claim No:  Clm 12345</Text>
-                    <Text>Reg No:  MH 06 98</Text>
-                    <Text>Work Shop:  Nano</Text>
-                    <Text>Location:   Western Express</Text>
-                    <View style={[{position:'absolute',top:0, right:20, backgroundColor:'lightgreen', width:50}]}>
-                        <Text>10min</Text>
-                    </View>
+                  <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
+                    <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Reg No</Text> 
+                    <Text >:&nbsp;&nbsp;</Text>  
+                    <Text >{item.item.vehicle_registration_no}</Text>
+                  </View>
+                  <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
+                    <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Work Shop</Text> 
+                    <Text >:&nbsp;&nbsp;</Text>  
+                    <Text >Nano</Text>
+                  </View>
+                  <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
+                    <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Location</Text> 
+                    <Text >:&nbsp;&nbsp;</Text>  
+                    <Text >{item.item.place_of_accident}</Text>
+                  </View>
+                    {this.props.status === '2'
+                      ?
+                        <>
+                          <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
+                            <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Status</Text> 
+                            <Text >:&nbsp;&nbsp;</Text>  
+                            <Text style={[{color:"#FFC804"}]} >InProgress</Text>
+                          </View>
+                          <View style={[{position:'absolute',top:0, right:20, padding:5, paddingLeft:15,borderBottomLeftRadius:10,borderTopLeftRadius:10, backgroundColor:"#FFA6A6", width:"auto"}]}>
+                            <Text>{secondsToTime(item.item.created_at).time}</Text>
+                          </View>
+                        </>
+                      :
+                        this.props.status === '4' 
+                        ?
+                          <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
+                            <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Status</Text> 
+                            <Text >:&nbsp;&nbsp;</Text>  
+                            <Text style={[{color:"#189333"}]} >Completed</Text>
+                          </View>
+                        :
+                          <View style={[{position:'absolute',top:0, right:20, padding:5, paddingLeft:15,borderBottomLeftRadius:10,borderTopLeftRadius:10, backgroundColor:secondsToTime(item.item.created_at).color, width:"auto"}]}>
+                            <Text>{secondsToTime(item.item.created_at).time}</Text>
+                          </View>
+                    }
                 </View>
-            </TouchableOpacity> */}
-                {/* </View>
-                <View style={[]}> */}
-    </View>
-  )
-}
+                
+              </TouchableOpacity>
+            )
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={ListEmptyComponent()}
+          showsVerticalScrollIndicator={false}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefreshFromTop}
+          onEndReached={this.handleLoadMoreFromBottom}
+          ListFooterComponent={this.renderLoader}
+        />
+        <View style={[{height:60}]}></View>
+      </View>
+    )
+  }
 }
 
 

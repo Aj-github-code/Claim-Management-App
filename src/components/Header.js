@@ -51,7 +51,7 @@ const style = StyleSheet.create({
    // elevation: 2,
     backgroundColor: colors.THEME,//PRIMARY,
     width: "100%",
-    marginBottom: 10
+    // marginBottom: 10
   },
   titleText: {
     //fontFamily: APPSTYLE.fontBold,

@@ -7,6 +7,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ToastAndroid,
   Switch,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -42,7 +43,7 @@ export default class NewVehicleDetail extends React.Component {
   }
 
   render() {
-    console.log("PROPS DATA", this.state.details);
+    // console.log("PROPS DATA", this.state.details);
     // console.log(userDetails, ">>>>>>>");
     return (
       <View style={[styles.container]}>
@@ -51,8 +52,8 @@ export default class NewVehicleDetail extends React.Component {
             this.props.navigation.pop();
           }}
           text={"Inspection Details"}
-          rightBtnIcon="bell"
-          rightBtnIcon2="search"
+          // rightBtnIcon="bell"
+          // rightBtnIcon2="search"
           bckBtn={true}
           rightImage={true}
         />
@@ -62,7 +63,7 @@ export default class NewVehicleDetail extends React.Component {
             backgroundColor: colors.WHITE,
             flexDirection: "row",
             flexWrap: "wrap",
-            marginTop: -10,
+            // marginTop: -10,
             width: "100%",
             height: "15%",
           }}
@@ -393,6 +394,7 @@ export default class NewVehicleDetail extends React.Component {
           <TouchableOpacity
             style={[styles.button]}
             onPress={() =>
+             
               this.props.navigation.navigate("Claim Form Details", {
                 claim_code: this.state.details.claim_code,
                 assessment_id: this.state.details.assessment_id,

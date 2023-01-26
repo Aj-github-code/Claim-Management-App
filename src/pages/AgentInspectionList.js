@@ -7,13 +7,15 @@ import { colors } from "../assets/config/colors";
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Alert } from "react-native";
 
-const AgentInspectionList = ({ navigation, route }) => {
+function AgentInspectionList({ navigation, route }) {
   const { claim_code, assessment_id } = route.params;
   const [Loading, setLoading] = useState(true);
   const [Data, setData] = useState({});
   const [state, setState] = useState({
     estimationDetails:{},
   });
+
+
 
   // console.log(userDetails.access_token, "hala u", claim_code);
   useEffect(() => {
@@ -25,7 +27,7 @@ const AgentInspectionList = ({ navigation, route }) => {
     )
       .then(({ data, status }) => {
         if (status === 200 || status === 201) {
-          // console.log(data, "daaaa", status);
+          console.log(data.data, "daaaa", status);
           setData(data.data.assessmentDetails);
      
         }
@@ -58,17 +60,21 @@ const AgentInspectionList = ({ navigation, route }) => {
         }}
         text={"Agent Inspection List"}
         rightBtnIcon="bell"
-        rightBtnIcon2="search"
+        rightBtnPress={() => { navigation.navigate('notifications') }} 
         bckBtn={true}
         rightImage={true}
       />
-       <ScrollView style={[{width:"100%", flexGrow: 1}]} >
+       <ScrollView style={[{width:"100%", flexGrow: 1, marginTop: 5}]} >
       {!Loading && (
         <>
           {Object.entries(Data).map(([ind, val]) => {
-            // console.log(ind, ">>>>");
             return (
-             <Products {...val}  key={ind} assessment_id={assessment_id} removeEstimation={handleRemoveEstimation} />
+              <Products 
+                {...val} 
+                key={ind}   
+                assessment_id={assessment_id} 
+                removeEstimation={handleRemoveEstimation} 
+              />
             );
           })}
         </>
@@ -82,31 +88,20 @@ const AgentInspectionList = ({ navigation, route }) => {
 export default AgentInspectionList;
 
 
-
-// Object.entries(vals).map(([index, value]) => {
-//   console.log(ind, ">>>>",val);
-//   return (
-//     <>
-//       <Text>HSN Code</Text>
-//     </>
-//   );
-// })
-
-
 export function Products(props){
 
   const [disable, setDisable] = React.useState(false)
   const [Loading, setLoading] = useState(true);
-  const [selected, setSelected] = React.useState("");
+  const [selected, setSelected] = React.useState(props.remark.toLowerCase());
   const remark = [{
-      key:1,
+      key:"repair",
       value:"Repair",
     },
     {
-        key:2,
-        value:"Replacement",
+        key:'replace',
+        value:"Replace",
     },{
-      key:3,
+      key:'open',
       value:"Kept Open",
     }
   ];
@@ -121,6 +116,7 @@ export function Products(props){
         0:{
           product_id:props.product_id,
           assessment_detail_id:props.id,
+          remark: selected,
           amount_after_tax:`${assessed}`
         }
       }}))
@@ -146,7 +142,7 @@ export function Products(props){
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'OK', onPress: () => {
-          
+          console.log(request);
           NewApiController(
             API_CONSTANTS.updateAssessmentDetails,
             { assessment_id: props.assessment_id, product :request.product, form_step:3},
@@ -273,9 +269,11 @@ export function Products(props){
             </Text>
             <SelectList data={remark}
               setSelected={setSelected} 
-              placeholder="Select Remark"
+              dropdownTextStyles={[{textAlign:'center'}]}
               boxStyles={[styles.TextInput]}
+              placeholder={props.remark ? props.remark.toUpperCase() : 'Select Remark'}
               dropdownStyles={[styles.dropdownStyles]}
+              onSelect={() => console.log(selected)} 
               maxHeight={150}
               />
         </View>

@@ -13,6 +13,8 @@ import * as GLOBAL from '../assets/config/constants';
 import { API_CONSTANTS } from '../assets/config/constants';
 import Header from '../components/Header';
 import AppText from '../components/AppText';
+import ListEmptyComponent from '../components/ListEmptyComponent';
+
 
 import moment from 'moment/moment';
 export default class EventList extends Component {
@@ -109,18 +111,11 @@ export default class EventList extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: 'white' }]}>
-        <Header goBack={() => { this.props.navigation.pop() }}  text={'Additional Claim'}  bckBtn={true} rightImage={true} />
-        {/* <View style={[{width:"100%"}]}> */}
-
-              
-            
-             
-        {/* </View> */}
-                {/* <Separator/> */}
-            
+      <SafeAreaView style={[styles.container]}>
+        <Header goBack={() => { this.props.navigation.navigate('Dashboard') }}  text={'Additional Claim'}  bckBtn={true} rightImage={true} />
+                
         <FlatList
-          // style={{marginTop:10}}
+     
           data={this.state.eventList}
           // renderItem={item => this._renderOrderList(item)}
           renderItem={(item) => { return (
@@ -149,9 +144,6 @@ export default class EventList extends Component {
                     ?
                     
                       <View style={[{width: "15%", marginLeft:10, display:"flex", justifyContent:"center", borderRadius:10,height:60, backgroundColor:"#A6F8A3"}]} >
-                      {/* <Icon name="check" style={{ color: '#55B44A', fontSize: 10 }} type="Ionicons" /> */}
-                      {/* <Icon name="eye" style={{ color: '#143176', fontSize: 20 }} type="Ionicons" /> */}
-                      {/* <Text style={[{alignSelf:"center", fontSize:14,marginTop:-10,marginBottom:5,}]}> Status</Text> */}
                       <Text style={[{alignSelf:"center", fontWeight:"bold", color:"white", fontSize:18}]}> Live</Text>
                       </View>
 
@@ -161,9 +153,6 @@ export default class EventList extends Component {
                         
                         ?
                           <View style={[{width: "15%", marginLeft:10, display:"flex", justifyContent:"center", borderRadius:10,height:60, backgroundColor:"#FB8A8D"}]} >
-                          {/* <Icon name="check" style={{ color: '#55B44A', fontSize: 10 }} type="Ionicons" /> */}
-                          {/* <Icon name="eye" style={{ color: '#143176', fontSize: 20 }} type="Ionicons" /> */}
-                          {/* <Text style={[{alignSelf:"center", fontSize:14, fontWeight:"bold",marginTop:-10,marginBottom:5, color:"white"}]}> Status</Text> */}
                           <Text style={[{alignSelf:"center", fontWeight:"bold", color:"white", fontSize:15}]}> Closed</Text>
                           </View>
                         :
@@ -171,9 +160,6 @@ export default class EventList extends Component {
                             ((moment(item.item.start_date).format('YYYY-MM-DD') > moment().format("YYYY-MM-DD")) && (moment(item.item.end_date).format('YYYY-MM-DD') > moment().format("YYYY-MM-DD")))
                             ?
                             <View style={[{width: "15%", marginLeft:10, display:"flex", justifyContent:"center", borderRadius:10,height:60, backgroundColor:"#F8EEA3"}]} >
-                            {/* <Icon name="check" style={{ color: '#55B44A', fontSize: 10 }} type="Ionicons" /> */}
-                            {/* <Icon name="eye" style={{ color: '#143176', fontSize: 20 }} type="Ionicons" /> */}
-                            {/* <Text style={[{alignSelf:"center", fontSize:14, fontWeight:"bold",marginTop:-10,marginBottom:5, color:"white"}]}> Status</Text> */}
                             <Text style={[{alignSelf:"center", textAlign:"center", fontWeight:"bold", color:"white", fontSize:15}]}> Up coming</Text>
                             </View>
                             :
@@ -189,27 +175,9 @@ export default class EventList extends Component {
                 {/* <Separator/> */}
             </View>
 
-        //     <View key={item.index} style={styles.orderListContainer}>
-        //     <View style={{ flexDirection: 'row' }}>
-        //         <View style={[styles.roundContainer, { backgroundColor: this.utils.getRandomColor() }]}>
-        //             {/* <AppText style={styles.text}>{this.utils.getInitials(GLOBAL.userDetails.roles == 'customer' ? item.item.organisation : item.item.customer)}</AppText> */}
-        //         </View>
-        //             <Text>{item.item.event_name}</Text>
-        //         {/* <View>
-        //             <AppText style={[styles.boldText, { fontSize: 16 }]}>{GLOBAL.userDetails.roles == 'customer' ? item.item.organisation : item.item.customer}</AppText>
-
-        //             <AppText style={[styles.boldText, { fontSize: 16 }]}>&#8377; {item.item.amount}</AppText>
-        //             <AppText style={{ color: colors.TEXTCOLOR }}>{moment(item.item.transaction_date, 'DD-MM-YYYY hh:mm a').format('DD MMM YYYY, hh:mm a')}</AppText>
-        //         </View> */}
-        //     </View>
-        //     {/* <View>
-        //         <Icon onPress={() => { this.confirmOrder(item.item, 1) }} name="md-checkmark-circle-outline" style={{ color: '#55B44A', fontSize: 30 }} type="Ionicons" />
-        //         <Icon onPress={() => { this.confirmOrder(item.item, 0) }} name="close-circle-outline" style={{ color: '#E1323A', fontSize: 30 }} type="Ionicons" />
-        //     </View> */}
-        // </View>
         ) }}
           keyExtractor={(item, index) => index.toString()}
-          // ListEmptyComponent={this._listEmptyComponent}
+          ListEmptyComponent={ListEmptyComponent()}
           showsVerticalScrollIndicator={false}
           refreshing={this.state.refreshing}
           onRefresh={this.handleRefreshFromTop}
@@ -223,7 +191,7 @@ export default class EventList extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1},
+    container: { flex: 1, backgroundColor: "#E5E5E5"},
     row: {  flex:2, justifyContent: 'center', flexDirection: "row", flexWrap: "wrap"},
     card: {
       backgroundColor: 'white',

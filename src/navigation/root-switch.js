@@ -26,17 +26,7 @@ import AgentInspectionList from "../pages/AgentInspectionList";
 import UploadAssessmentImages from "../pages/UploadAssessmentImages";
 import Questionaire from "../pages/Questionaire";
 import UploadAccidentImages from "../pages/UploadAccidentImages";
-// import Dashboard from '../pages/Dashboard/Dashboard';
-// import Registration from '../pages/Authentication/Registration';
-// import ForgotPassword from '../pages/Authentication/ForgotPassword';
-// import Profile from '../pages/Dashboard/Profile';
-// import Scan from '../pages/Dashboard/Scan';
-// import Payment from '../pages/Dashboard/Payment';
-// import Search from '../pages/Dashboard/Search';
-// import Confirmation from '../pages/Dashboard/Confirmation';
-// import OrderList from '../pages/Dashboard/OrderList';
-// import PendingOrderList from '../pages/Dashboard/PendingOrderList';
-// import EditProfile from '../pages/Dashboard/EditProfile';
+import Notifications from "../pages/Notifications";
  function InProgress(props) {
   return <InspectionList {...props} status="2" />
  }
@@ -59,6 +49,7 @@ const Router = () => (
   >
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="HomeTabs" component={HomeTabs} />
+    <Stack.Screen name="notifications" component={Notifications} />
     <Stack.Screen name="EventList" component={EventList} />
     <Stack.Screen name="AddVisitor" component={AddVisitor} />
     <Stack.Screen name="EventVenueList" component={EventVenueList} />

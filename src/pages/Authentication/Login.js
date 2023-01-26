@@ -85,7 +85,7 @@ export default class Login extends React.Component {
       ToastAndroid.show('Invalid Password! PLease Enter Valid Password.', ToastAndroid.SHORT);
       return false;
     } else if(this.state.password.length < 5) {
-      ToastAndroid.show('Password has to be 5 characters long', ToastAndroid.SHORT);
+      ToastAndroid.show('Password has to be atleast 5 characters long', ToastAndroid.SHORT);
       return false;
     }
  
@@ -143,13 +143,14 @@ export default class Login extends React.Component {
             value={this.state.username}
             style={AuthStyles.inputBox}
             // keyboardType={'numeric'}
+            placeholder={'E.g. example@mail.com'}
             onChange={(text) => this.setState({ username: text })}
           />
           <Input
             lblName="Password"
             value={this.state.password}
             style={AuthStyles.inputBox}
-     
+            placeholder={'###-###'}
             secureTextEntry={this.state.hidePassword}
             showEyeIcon={true}
             onChange={(text) => this.setState({ password: text })}

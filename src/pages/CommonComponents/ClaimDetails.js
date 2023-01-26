@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import Header from "../../components/Header";
@@ -227,13 +228,11 @@ const ClaimDetails = ({
     <View>
       <Header
         goBack={() => {
-          setIsStartInvestigationButtonPressed(
-            !isStartInvestigationButtonPressed
-          );
+          navigation.navigate('Dashboard')
         }}
         text={"Claim Details"}
         rightBtnIcon="bell"
-        rightBtnIcon2="search"
+        rightBtnPress={() => { navigation.navigate('notifications') }} 
         bckBtn={true}
         rightImage={true}
       />
@@ -245,7 +244,10 @@ const ClaimDetails = ({
       <TouchableOpacity
         // disabled={isDisabled}
         onPress={() =>
-          navigation.navigate("Agent Inspection List", { claim_code, assessment_id })
+          {
+            ToastAndroid.show('Submitted Successfully!', ToastAndroid.SHORT),
+            setTimeout(()=>{navigation.navigate("Agent Inspection List", { claim_code, assessment_id })}, 1500)
+          }
           // navigation.navigate("Upload Accident Images", { claim_code, assessment_id })
         }
         style={{

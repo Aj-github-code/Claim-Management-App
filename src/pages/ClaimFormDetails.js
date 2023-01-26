@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from "react-native";
 import React, { useEffect, useState } from "react";
 import NewApiController from "../services/NewApiController";
 import { API_CONSTANTS, userDetails } from "../assets/config/constants";
@@ -73,7 +73,7 @@ const ClaimFormDetails = ({ route, navigation }) => {
             }}
             text={"Claim Form Details"}
             rightBtnIcon="bell"
-            rightBtnIcon2="search"
+            rightBtnPress={() => { navigation.navigate('notifications') }} 
             bckBtn={true}
             rightImage={true}
           />
@@ -104,9 +104,13 @@ const ClaimFormDetails = ({ route, navigation }) => {
 
             <TouchableOpacity
               onPress={() =>
-                setIsStartInvestigationButtonPressed(
-                  !isStartInvestigationButtonPressed
-                )
+                {
+                  ToastAndroid.show( `Inspection Started!` , ToastAndroid.SHORT),
+                  setTimeout(()=>{
+                  setIsStartInvestigationButtonPressed(
+                    !isStartInvestigationButtonPressed
+                  )},1000)
+                }
               }
               style={{
                 marginHorizontal: 16,
