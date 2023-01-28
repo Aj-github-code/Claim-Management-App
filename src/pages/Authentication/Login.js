@@ -71,22 +71,27 @@ export default class Login extends React.Component {
   handleLogin() {
 
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if(this.state.username === ""){
-      console.log('PLease Enter Username.');
-      ToastAndroid.show('PLease Enter Username.', ToastAndroid.SHORT);
-      return false;
-    } else if (reg.test(this.state.username) === false) {
-      console.log('Invalid Username! PLease Enter Valid Username.')
-      ToastAndroid.show('Invalid Username! PLease Enter Valid Username.', ToastAndroid.SHORT);
-      return false;
-    }
+    if(this.state.username === "" && this.state.password === ""){
+      ToastAndroid.show('PLease Enter Login Credentials.', ToastAndroid.SHORT);
+    }else {
 
-    if(this.state.password === "" ){
-      ToastAndroid.show('Invalid Password! PLease Enter Valid Password.', ToastAndroid.SHORT);
-      return false;
-    } else if(this.state.password.length < 5) {
-      ToastAndroid.show('Password has to be atleast 5 characters long', ToastAndroid.SHORT);
-      return false;
+      if(this.state.username === ""){
+        console.log('PLease Enter Username.');
+        ToastAndroid.show('Please Enter Username.', ToastAndroid.SHORT);
+        return false;
+      } else if (reg.test(this.state.username) === false) {
+        console.log('Invalid Username! Please Enter Valid Username.')
+        ToastAndroid.show('Invalid Username! Please Enter Valid Username.', ToastAndroid.SHORT);
+        return false;
+      }
+  
+      if(this.state.password === "" ){
+        ToastAndroid.show('Invalid Password! Please Enter Valid Password.', ToastAndroid.SHORT);
+        return false;
+      } else if(this.state.password.length < 5) {
+        ToastAndroid.show('Password has to be atleast 5 characters long', ToastAndroid.SHORT);
+        return false;
+      }
     }
  
     console.log('Invalid Username! ')

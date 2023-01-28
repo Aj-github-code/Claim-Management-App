@@ -77,8 +77,8 @@ import {
               navigation.pop();
             }}
             text={"Agent Review Images"}
-            rightBtnIcon="bell"
-            rightBtnIcon2="search"
+            // rightBtnIcon="bell"
+            // rightBtnIcon2="search"
             bckBtn={true}
             rightImage={true}
           />

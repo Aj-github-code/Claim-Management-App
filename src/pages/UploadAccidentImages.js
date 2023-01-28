@@ -135,7 +135,25 @@ import {
       }
 
       const handleRedirect =() =>{
-        navigation.navigate('New Inspection')
+
+        NewApiController(
+          API_CONSTANTS.updateAssignedClaimStatus,
+          {
+            claim_code: claim_code,
+            status: 4 
+          },
+          "POST",
+          userDetails.access_token
+        )
+          .then(({ data, status }) => {
+            setLoading(false);
+            setTimeout(()=>{navigation.navigate('New Inspection')},1500)
+          })
+          .catch((err) => {
+            setLoading(false);
+            console.log(err, "Error from claim form details screen");
+          });
+       
       }
     return(
   
@@ -145,8 +163,8 @@ import {
                     navigation.pop();
                     }}
                     text={"Upload Accident Images"}
-                    rightBtnIcon="bell"
-                    rightBtnIcon2="search"
+                    // rightBtnIcon="bell"
+                    // rightBtnIcon2="search"
                     bckBtn={true}
                     rightImage={true}
                 />

@@ -122,7 +122,7 @@ const HomeTabs = () => {
       />
       <Tab.Screen
         name={"New Inspection"}
-        component={InspectionList}
+        component={NewInspection}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.centerAligned}>

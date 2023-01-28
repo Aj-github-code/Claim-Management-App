@@ -53,7 +53,7 @@ export default class InspectionList extends React.Component{
         GLOBAL.loadingVisible.setState({ loading: true });
        if(this.state.totalRecords >= this.state.pageLength){
         this.apiCtrl.callAxios(API_CONSTANTS.claimList, {   length: pageLength, status:this.props.status }).then(response => {
-            console.log('Responses', response);
+            // console.log('Responses', response);
             // this.setState({ loading: false })
             if (response.data.aaData) {
 
@@ -145,7 +145,8 @@ export default class InspectionList extends React.Component{
         text={'Inspection List'} 
         rightBtnIcon='bell' 
         rightBtnPress={() => { this.props.navigation.navigate('notifications') }} 
-        rightBtnIcon2='search' 
+        // rightBtnIcon2='search' 
+        
         bckBtn={true} 
         rightImage={true} />
         

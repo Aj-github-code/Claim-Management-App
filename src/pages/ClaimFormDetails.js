@@ -45,6 +45,30 @@ const ClaimFormDetails = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    if(isStartInvestigationButtonPressed == true){
+      NewApiController(
+        API_CONSTANTS.updateAssignedClaimStatus,
+        {
+          claim_code: claim_code,
+          status: 2 
+        },
+        "POST",
+        userDetails.access_token
+      )
+        .then(({ data, status }) => {
+         
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err, "Error from claim form details screen");
+        });
+    }
+  }, [isStartInvestigationButtonPressed]);
+
+  useEffect(() => {
+
+
     NewApiController(
       API_CONSTANTS.getClaimDetails,
       { claim_code },
@@ -61,7 +85,10 @@ const ClaimFormDetails = ({ route, navigation }) => {
         setLoading(false);
         console.log(err, "Error from claim form details screen");
       });
-  }, []);
+    
+
+  }, [])
+
 
   return (
     <>

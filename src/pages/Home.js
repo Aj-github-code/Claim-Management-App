@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { colors} from '../assets/config/colors';
-import { BackHandler, View, StyleSheet, TouchableOpacity, Image, Pressable, Text } from 'react-native';
+import { BackHandler, View, StyleSheet, TouchableOpacity, Image, Pressable, Text, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -96,11 +96,32 @@ export default class Home extends Component {
 
   render() {
     // console.log('State Data', this.state)
+
+    const logout = () => {
+      Alert.alert('Logout', 'Press ok to logout', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => 
+        {this.storageCtrl.clearAll(),
+          setTimeout(()=>{
+            this.props.navigation.navigate('Login');
+          }, 1000)}
+      },
+      ]);
+     
+    }
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: '#ecf0f1' }]}>
-            <Header rightImage={true} text={"Hello, " + this.state.name} bckBtn={false}
-        // rightBtnPress={() => { this.setState({ showFilter: true }) }} 
-        // rightBtnIcon="filter" 
+            <Header 
+            rightImage={true} 
+            text={"Hello, " + this.state.name} 
+            bckBtn={false}
+            rightBtnPress={() => { logout() }} 
+            rightBtnIcon="arrow-circle-right" 
         // iconType="FontAwesome" 
         // rightBtnIcon2="search" 
         // rightBtnPress2={() => { this.props.navigation.push('Search') }} 

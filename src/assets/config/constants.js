@@ -1,7 +1,9 @@
 import React from "react";
-
+// "https://demo.ezclicktech.com/api",
+//'https://primarykeytech.in/glocal/api',
+// BASE_URL: "https://claim.primarykeytech.in/api",
 export const API_CONSTANTS = {
-  BASE_URL: "https://claim.primarykeytech.in/api", //'https://primarykeytech.in/glocal/api',
+  BASE_URL: "https://demo.ezclicktech.com/api",
   login: "/api/login", //used
   register: "/api/register", //used
   createOrder: "/api/order/create",
@@ -36,6 +38,7 @@ export const API_CONSTANTS = {
     uploadAssessmentImages: '/api/add-assessment-image',
     getAssessmentDetailProduct: '/api/get-assessment-detail-product',
     uploadAccidentImage: '/api/storeAccidentImages',
+    updateAssignedClaimStatus: '/api/update-assigned-claim-status'
 };
 
 export let userDetails = null;
