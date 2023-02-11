@@ -61,25 +61,26 @@ import {
     delete temp[`${data}`];
 
     setTempData(temp);
-  
+  console.log(Object.keys(temp).length)
     if(Object.keys(temp).length === 0){
       ToastAndroid.show( `Estimation Updated Successfully!` , ToastAndroid.SHORT);
       navigation.navigate("Questionaire",{claim_code: claim_code, assessment_id: assessment_id})
       setIsDisabled(false)
     }
   }
+  
 
     return(
       <>
         <View>
           <Header
-            goBack={() => {
-              navigation.pop();
-            }}
+            // goBack={() => {
+            //   navigation.pop();
+            // }}
             text={"Agent Review Images"}
             // rightBtnIcon="bell"
             // rightBtnIcon2="search"
-            bckBtn={true}
+            // bckBtn={true}
             rightImage={true}
           />
           <ScrollView style={[{width:"100%", flexGrow: 1}]} >
@@ -289,7 +290,7 @@ import {
       >
         <Icon name={'camera'} size={35} light color={colors.THEME} />
       </TouchableOpacity>
-    <Image source={{uri: cameraPhoto}} />
+    {/* <Image source={{uri: cameraPhoto}} /> */}
     </View>
   </View>
   )

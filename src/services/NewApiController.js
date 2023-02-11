@@ -18,8 +18,10 @@ const NewApiController = async (endpoint, body, method, token) => {
       headers,
       responseType: "json",
     });
+    
     return response;
   } catch (error) {
+    console.log(error)
     throw error;
   }
 };

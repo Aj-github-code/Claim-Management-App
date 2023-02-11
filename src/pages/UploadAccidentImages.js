@@ -159,13 +159,13 @@ import {
   
            <View>
                 <Header
-                    goBack={() => {
-                    navigation.pop();
-                    }}
+                    // goBack={() => {
+                    // navigation.pop();
+                    // }}
                     text={"Upload Accident Images"}
                     // rightBtnIcon="bell"
                     // rightBtnIcon2="search"
-                    bckBtn={true}
+                    // bckBtn={true}
                     rightImage={true}
                 />
                 <ScrollView style={[{width:"100%", flexGrow: 1}]} >

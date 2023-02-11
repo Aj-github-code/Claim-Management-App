@@ -38,7 +38,9 @@ export const API_CONSTANTS = {
     uploadAssessmentImages: '/api/add-assessment-image',
     getAssessmentDetailProduct: '/api/get-assessment-detail-product',
     uploadAccidentImage: '/api/storeAccidentImages',
-    updateAssignedClaimStatus: '/api/update-assigned-claim-status'
+    updateAssignedClaimStatus: '/api/update-assigned-claim-status',
+    qustionAnswerList: '/api/question-answer-list',
+    storeInspectionDetails: '/api/storeInspectionDetails',
 };
 
 export let userDetails = null;

@@ -28,6 +28,7 @@ const ClaimDetails = ({
       isChecked: false,
       isImageUploaded: false,
       imageUrl: "",
+      error: "",
     },
     {
       id: "2",
@@ -35,6 +36,7 @@ const ClaimDetails = ({
       isChecked: false,
       isImageUploaded: false,
       imageUrl: "",
+      error: "",
     },
     {
       id: "3",
@@ -42,6 +44,7 @@ const ClaimDetails = ({
       isChecked: false,
       isImageUploaded: false,
       imageUrl: "",
+      error: "",
     },
     {
       id: "4",
@@ -49,83 +52,129 @@ const ClaimDetails = ({
       isChecked: false,
       isImageUploaded: false,
       imageUrl: "",
+      error: "",
     },
   ];
 
   const [ClaimQuestions, setClaimQuestions] = useState(claimQuestions);
+  
   const [isDisabled, setIsDisabled] = useState(true);
   const renderItem = (item, index) => {
     const captureImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        // allowsEditing: true,
-        // aspect: [4, 3],
-        quality: 1,
-        base64: true,
-        allowsMultipleSelection: false,
-        selectionLimit: 0,
-      });
+      const result = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (result.granted === false) {
+        alert("You've refused to allow this app to access your photos!");
+        
 
-      if (result.assets.length > 0) {
-        let promotionIndex = ClaimQuestions.findIndex(
-          (val) => val.id === item.id
-        );
-        if (promotionIndex > -1) {
+      } else {
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          aspect: [1, 1],
+          quality: 1,
+          base64: true,
+          allowsMultipleSelection: false,
+          selectionLimit: 0,
+        });
+    
+        if (!result.canceled) {
+          if (result.assets.length > 0) {
+            let promotionIndex = ClaimQuestions.findIndex(
+              (val) => val.id === item.id
+            );
+            if (promotionIndex > -1) {
+              let newArray = [
+                ...ClaimQuestions.slice(0, promotionIndex),
+                {
+                  ...ClaimQuestions[promotionIndex],
+                  isChecked: true,
+                  isImageUploaded: item.isImageUploaded === false ? true : false,
+                  imageUrl: result.assets[0].uri,
+                },
+                ...ClaimQuestions.slice(promotionIndex + 1),
+              ];
+              setClaimQuestions(newArray);
+            }
+    
+            let imageKey;
+            if (item.id == "1") {
+              // punchname
+              imageKey = "punchnama_carried_out_image";
+            } else if (item.id == "2") {
+              // injury to driver
+              imageKey = "injury_to_driver_occupant_image";
+            } else if (item.id == "3") {
+              // was any third party involve in accident
+              imageKey = "third_party_involved_in_accident_image";
+            } else {
+              // particulars of third party image or loss
+              imageKey = "particulars_of_third_party_injury_loss_image";
+            }
+    
+            NewApiController(
+              API_CONSTANTS.addImagesToClaimQuestion,
+              {
+                claim_code,
+                image: {
+                  [imageKey]: `data:image/png;base64,${result.assets[0].base64}`,
+                },
+              },
+              "POST",
+              token
+            )
+              .then((res) => {
+                if (res.status == 200) {
+                  // check if all keys have image uploaded to true
+                  const isAllImagesUploaded = ClaimQuestions.filter(
+                    (val) => val.isImageUploaded === true
+                  );
+                  if (isAllImagesUploaded.length >= 3) {
+                    setIsDisabled(false);
+                  }
+                }
+                console.log(res.data, res.status);
+              })
+              .catch((err) => {
+                console.log(err, "error");
+              });
+          }
+        }
+        
+        // console.log(result)
+      }
+      console.log(ClaimQuestions);
+     
+    };
+
+    const handleCheck = () => {
+      let promotionIndex = ClaimQuestions.findIndex(
+        (val) => val.id === item.id
+      );
+      if (promotionIndex > -1) {
+        let checked = true;
+        if(item.isChecked){
+          checked = false;
+        }
+      
+      
+        if(checked){
+          captureImage()
+        } else {
           let newArray = [
             ...ClaimQuestions.slice(0, promotionIndex),
             {
               ...ClaimQuestions[promotionIndex],
-              isImageUploaded: item.isImageUploaded === false ? true : false,
-              imageUrl: result.assets[0].uri,
+              isChecked: checked,
+              isImageUploaded: false,
             },
             ...ClaimQuestions.slice(promotionIndex + 1),
           ];
           setClaimQuestions(newArray);
         }
-
-        let imageKey;
-        if (item.id == "1") {
-          // punchname
-          imageKey = "punchnama_carried_out_image";
-        } else if (item.id == "2") {
-          // injury to driver
-          imageKey = "injury_to_driver_occupant_image";
-        } else if (item.id == "3") {
-          // was any third party involve in accident
-          imageKey = "third_party_involved_in_accident_image";
-        } else {
-          // particulars of third party image or loss
-          imageKey = "particulars_of_third_party_injury_loss_image";
-        }
-
-        NewApiController(
-          API_CONSTANTS.addImagesToClaimQuestion,
-          {
-            claim_code,
-            image: {
-              [imageKey]: `data:image/png;base64,${result.assets[0].base64}`,
-            },
-          },
-          "POST",
-          token
-        )
-          .then((res) => {
-            if (res.status == 200) {
-              // check if all keys have image uploaded to true
-              const isAllImagesUploaded = ClaimQuestions.filter(
-                (val) => val.isImageUploaded === true
-              );
-              if (isAllImagesUploaded.length >= 3) {
-                setIsDisabled(false);
-              }
-            }
-            console.log(res.data, res.status);
-          })
-          .catch((err) => {
-            console.log(err, "error");
-          });
       }
-    };
+    }
+
+
 
     return (
       <View
@@ -151,20 +200,7 @@ const ClaimDetails = ({
           <View style={{ flexDirection: "row", marginBottom: 16 }}>
             <TouchableOpacity
               onPress={() => {
-                let promotionIndex = ClaimQuestions.findIndex(
-                  (val) => val.id === item.id
-                );
-                if (promotionIndex > -1) {
-                  let newArray = [
-                    ...ClaimQuestions.slice(0, promotionIndex),
-                    {
-                      ...ClaimQuestions[promotionIndex],
-                      isChecked: item.isChecked === false ? true : false,
-                    },
-                    ...ClaimQuestions.slice(promotionIndex + 1),
-                  ];
-                  setClaimQuestions(newArray);
-                }
+                handleCheck()
               }}
             >
               {item.isChecked ? (
@@ -182,6 +218,7 @@ const ClaimDetails = ({
             <Text style={{ marginLeft: 10, color: colors.THEME }}>
               {item.isChecked ? "Yes" : "No"}
             </Text>
+            <Text style={{ marginLeft: 10, color: 'red' }}>{item.error}</Text>
           </View>
         </View>
         <View>
@@ -224,6 +261,36 @@ const ClaimDetails = ({
       </View>
     );
   };
+
+  const handleSubmit = () => {
+    let errors = false;
+    console.log('hii')
+    let newArray = [];
+    ClaimQuestions.map((value, index)=>{
+      if((value.isChecked == true) && ((value.imageUrl === "") || (value.imageUrl == null))){
+        errors = true;
+        newArray[index] = {
+                            ...ClaimQuestions[index],
+                            error: "*Required",
+                          }
+      } else {
+        newArray[index] = {
+          ...ClaimQuestions[index],
+          error: "",
+        }
+      }
+      
+    })
+      setClaimQuestions(newArray);
+    if(!errors){
+      ToastAndroid.show('Submitted Successfully!', ToastAndroid.SHORT)
+      setTimeout(()=>{navigation.navigate("Agent Inspection List", { claim_code, assessment_id })}, 1500)
+    } else {
+      
+   
+    }
+  }
+
   return (
     <View>
       <Header
@@ -245,8 +312,7 @@ const ClaimDetails = ({
         // disabled={isDisabled}
         onPress={() =>
           {
-            ToastAndroid.show('Submitted Successfully!', ToastAndroid.SHORT),
-            setTimeout(()=>{navigation.navigate("Agent Inspection List", { claim_code, assessment_id })}, 1500)
+            handleSubmit()
           }
           // navigation.navigate("Upload Accident Images", { claim_code, assessment_id })
         }

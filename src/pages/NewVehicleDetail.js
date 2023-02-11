@@ -20,6 +20,7 @@ import { userDetails } from "../assets/config/constants";
 import { API_CONSTANTS } from "../assets/config/constants";
 import moment from "moment";
 import { Linking } from "react-native";
+import MarqueeText from "react-native-marquee";
 
 export default class NewVehicleDetail extends React.Component {
   constructor(props) {
@@ -65,7 +66,7 @@ export default class NewVehicleDetail extends React.Component {
             flexWrap: "wrap",
             // marginTop: -10,
             width: "100%",
-            height: "15%",
+            height: "auto",
           }}
         >
           <TouchableOpacity
@@ -91,6 +92,7 @@ export default class NewVehicleDetail extends React.Component {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                paddingTop: 10,
                 marginLeft: 30,
               },
             ]}
@@ -98,20 +100,20 @@ export default class NewVehicleDetail extends React.Component {
             <View
               style={[{ width: "62%", display: "flex", flexDirection: "row" }]}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold", width: 100 }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", width: 100 }}>
                 Name:{" "}
               </Text>
-              <Text style={{ fontSize: 20 }}>
+              <Text style={{ fontSize: 14, width: 100 }}>
                 {this.state.details.insured_name}
               </Text>
             </View>
             <View
               style={[{ width: "62%", display: "flex", flexDirection: "row" }]}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold", width: 100 }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", width: 100 }}>
                 Location:{" "}
               </Text>
-              <Text style={{ fontSize: 20 }}>
+              <Text style={{ fontSize: 14, width: 100 }}>
                 {this.state.details.place_of_accident}
               </Text>
             </View>
@@ -142,6 +144,7 @@ export default class NewVehicleDetail extends React.Component {
                   flexDirection: "column",
                   justifyContent: "center",
                   marginLeft: 30,
+                  marginTop:'10%',
                 },
               ]}
             >
@@ -152,7 +155,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -160,7 +163,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Claim No:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.claim_code}
                 </Text>
               </View>
@@ -171,7 +174,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -179,7 +182,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Reg No:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_registration_no}
                 </Text>
               </View>
@@ -190,7 +193,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -198,7 +201,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Chassis No:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_chassis_no}
                 </Text>
               </View>
@@ -209,7 +212,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -217,7 +220,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Engine No:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_engine_no}
                 </Text>
               </View>
@@ -228,7 +231,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -236,7 +239,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Make:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_make}
                 </Text>
               </View>
@@ -247,7 +250,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -255,7 +258,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Model:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_model}
                 </Text>
               </View>
@@ -266,7 +269,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -274,7 +277,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Odometer Reading:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.vehicle_odometer_reading}
                 </Text>
               </View>
@@ -286,7 +289,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -294,7 +297,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Assignment Date:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.assignment_date}
                 </Text>
               </View>
@@ -305,7 +308,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -313,7 +316,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Workshop:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.workshop_name}
                 </Text>
               </View>
@@ -324,7 +327,7 @@ export default class NewVehicleDetail extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: "bold",
                     width: 180,
                     marginTop: 5,
@@ -332,7 +335,7 @@ export default class NewVehicleDetail extends React.Component {
                 >
                   Location:{" "}
                 </Text>
-                <Text style={{ fontSize: 20 }}>
+                <Text style={{ fontSize: 16 }}>
                   {this.state.details.place_of_accident}
                 </Text>
               </View>
@@ -425,7 +428,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 18,
     paddingBottom: 20,
   },
   button: {

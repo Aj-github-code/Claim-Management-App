@@ -29,12 +29,12 @@ function AgentInspectionList({ navigation, route }) {
         if (status === 200 || status === 201) {
           console.log(data.data, "daaaa", status);
           setData(data.data.assessmentDetails);
-     
+          // console.log('On Start', 'Count', Object.keys(Data).length, 'Loading', Loading)
+          setLoading(false);
         }
-        setLoading(false);
       })
       .catch((err) => {
-        setLoading(false);
+        // setLoading(false);
         // console.log(err, "error"); 
       });
   }, []);
@@ -51,34 +51,39 @@ function AgentInspectionList({ navigation, route }) {
       navigation.navigate("Upload Assessment Images",{claim_code: claim_code, assessment_id: assessment_id})
     }
   }
-
+  console.log('On render', 'Count', Object.keys(Data).length, 'Loading', Loading)
   return (
     <View>
       <Header
-        goBack={() => {
-          navigation.pop();
-        }}
+        // goBack={() => {
+        //   navigation.pop();
+        // }}
         text={"Agent Inspection List"}
         rightBtnIcon="bell"
         rightBtnPress={() => { navigation.navigate('notifications') }} 
-        bckBtn={true}
+        // bckBtn={true}
         rightImage={true}
       />
        <ScrollView style={[{width:"100%", flexGrow: 1, marginTop: 5}]} >
       {!Loading && (
         <>
-          {Object.entries(Data).map(([ind, val]) => {
-            return (
-              <Products 
-                {...val} 
-                key={ind}   
-                assessment_id={assessment_id} 
-                removeEstimation={handleRemoveEstimation} 
-              />
-            );
-          })}
+          {
+             ((Data != null) && (typeof Data !== 'undefined')) && (Object.keys(Data).length > 0) &&
+        
+            (Object.entries(Data).map(([ind, val]) => {
+  
+              return (
+                <Products 
+                  {...val} 
+                  key={ind}   
+                  assessment_id={assessment_id} 
+                  removeEstimation={handleRemoveEstimation} 
+                />
+              );
+              
+          }))}
         </>
-      )}
+      )} 
       <View style={{height:50}}></View>
       </ScrollView>
     </View>
@@ -107,7 +112,7 @@ export function Products(props){
   ];
 
   const [request, setRequest] = React.useState({});
-  const [assessed, setAssessed] = React.useState(Math.floor(props.amount_after_tax).toFixed(0));
+  const [assessed, setAssessed] = React.useState((parseInt(props.amount_after_tax).toFixed(0)));
 
   
   useEffect(()=>{
@@ -240,7 +245,7 @@ export function Products(props){
           <Text style={[
             styles.text
             ]}>
-              {Math.floor(props.estimate_amt)}/-
+              {(typeof props.estimate_amt !== 'undefined') ? props.estimate_amt.toFixed(2) : props.estimate_amt}/-
           </Text>
         </View>
         <View style={{
@@ -299,15 +304,17 @@ export function Products(props){
               editable />
         </View>
         {
+          ((props.services != null) && (typeof props.services !== 'undefined')) && (Object.keys(props.services).length > 0) &&
+
+            Object.entries(props.services).map(([_, vals]) => {
+              
+              return(
+                <>
+                  <Services {...vals} key={_} func={()=>{handleServices}} position={(++_)} /> 
+                </>
+              )
+            })}
           
-        Object.entries(props.services).map(([_, vals]) => {
-          
-          return(
-            <>
-              <Services {...vals} key={_} func={handleServices} position={(++_)} /> 
-            </>
-          )
-        })}
 
         <TouchableOpacity 
           disabled={disable}
@@ -338,7 +345,7 @@ export const Services = (props) => {
 
 
   
-  const [amt, setAmt] = React.useState((props.amount_after_tax !== '') ? Math.floor(props.amount_after_tax).toFixed(0) : null)
+  const [amt, setAmt] = React.useState((props.amount_after_tax !== '') ? parseInt(props.amount_after_tax).toFixed(0) : null)
 
 
   useEffect(()=>{
