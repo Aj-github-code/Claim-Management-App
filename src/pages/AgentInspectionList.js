@@ -6,6 +6,7 @@ import { API_CONSTANTS, userDetails } from "../assets/config/constants";
 import { colors } from "../assets/config/colors";
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Alert } from "react-native";
+import ListEmptyComponent from "../components/ListEmptyComponent";
 
 function AgentInspectionList({ navigation, route }) {
   const { claim_code, assessment_id } = route.params;
@@ -19,6 +20,7 @@ function AgentInspectionList({ navigation, route }) {
 
   // console.log(userDetails.access_token, "hala u", claim_code);
   useEffect(() => {
+    // console.log('Hii', assessment_id)
     NewApiController(
       API_CONSTANTS.getAssessmentDetailsNew,
       { assessment_id: assessment_id },
@@ -27,15 +29,15 @@ function AgentInspectionList({ navigation, route }) {
     )
       .then(({ data, status }) => {
         if (status === 200 || status === 201) {
-          console.log(data.data, "daaaa", status);
-          setData(data.data.assessmentDetails);
+          // console.log(data.data, "daaaa", status);
+          setData(data.data.assessmentDetails ? data.data.assessmentDetails : {});
           // console.log('On Start', 'Count', Object.keys(Data).length, 'Loading', Loading)
           setLoading(false);
         }
       })
       .catch((err) => {
         // setLoading(false);
-        // console.log(err, "error"); 
+        console.log(err, "error"); 
       });
   }, []);
 
@@ -51,7 +53,29 @@ function AgentInspectionList({ navigation, route }) {
       navigation.navigate("Upload Assessment Images",{claim_code: claim_code, assessment_id: assessment_id})
     }
   }
-  console.log('On render', 'Count', Object.keys(Data).length, 'Loading', Loading)
+
+  const handleSkip = () => {
+
+    NewApiController(
+      API_CONSTANTS.updateAssessmentFormStepById,
+      { assessment_id: assessment_id, form_step: 2 },
+      "POST",
+      userDetails.access_token
+    )
+      .then(({ data, status }) => {
+        if (status === 200 || status === 201) {
+          // console.log(data.data, "daaaa", status);
+          // console.log('On Start', 'Count', Object.keys(Data).length, 'Loading', Loading)
+          navigation.navigate("Questionaire",{claim_code: claim_code, assessment_id: assessment_id})
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        // setLoading(false);
+        console.log(err, "error"); 
+      });
+  }
+
   return (
     <View>
       <Header
@@ -68,7 +92,7 @@ function AgentInspectionList({ navigation, route }) {
       {!Loading && (
         <>
           {
-             ((Data != null) && (typeof Data !== 'undefined')) && (Object.keys(Data).length > 0) &&
+             ((Data != null) && (typeof Data !== 'undefined')) && (Object.keys(Data).length > 0) ?
         
             (Object.entries(Data).map(([ind, val]) => {
   
@@ -79,9 +103,31 @@ function AgentInspectionList({ navigation, route }) {
                   assessment_id={assessment_id} 
                   removeEstimation={handleRemoveEstimation} 
                 />
-              );
-              
-          }))}
+              ) 
+            }))
+            :
+            <>
+            <ListEmptyComponent text={'No Inspection Found'} />
+            <TouchableOpacity 
+          onPress={
+            ()=>handleSkip()
+          }
+          style={{
+            
+            backgroundColor: colors.THEME,
+            height: 48,
+            width: "95%",
+            marginTop:12,
+
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center",
+            borderRadius: 5,
+          }} >
+          <Text style={{ color: colors.WHITE }}>Next</Text>
+        </TouchableOpacity >
+            </>
+        }
         </>
       )} 
       <View style={{height:50}}></View>
@@ -113,7 +159,7 @@ export function Products(props){
 
   const [request, setRequest] = React.useState({});
   const [assessed, setAssessed] = React.useState((parseInt(props.amount_after_tax).toFixed(0)));
-
+  const [tempAssessed, setTempAssessed] = React.useState((parseInt(props.amount_after_tax).toFixed(0)));
   
   useEffect(()=>{
     setRequest((prev) =>({...prev, 
@@ -150,7 +196,7 @@ export function Products(props){
           console.log(request);
           NewApiController(
             API_CONSTANTS.updateAssessmentDetails,
-            { assessment_id: props.assessment_id, product :request.product, form_step:3},
+            { assessment_id: props.assessment_id, product :request.product, form_step:1},
             "POST",
             userDetails.access_token
             )
@@ -173,6 +219,15 @@ export function Products(props){
       ],
       {cancelable: false},
     );
+  }
+
+  const onSelectRemark = () => {
+    if(selected === "repair"){
+      setTempAssessed(assessed)
+      setAssessed(0);
+    } else {
+      setAssessed(tempAssessed);
+    }
   }
 
 
@@ -260,12 +315,13 @@ export function Products(props){
           }]}>{props.remark.toUpperCase()}</Text>
         </View>
       </View>
-      <View style={{marginTop:10}}>
+      <View style={{marginTop:10, width:'100%'}}>
         <View style={{  
                display:'flex',
                flexDirection:'row',
                justifyContent:'space-between',
                marginBottom:6,
+               width:'100%'
             }}>
             <Text style={[
                 styles.boldText
@@ -273,12 +329,12 @@ export function Products(props){
               Agent Remark
             </Text>
             <SelectList data={remark}
-              setSelected={setSelected} 
+              setSelected={(text)=>{setSelected(text),onSelectRemark}} 
               dropdownTextStyles={[{textAlign:'center'}]}
               boxStyles={[styles.TextInput]}
               placeholder={props.remark ? props.remark.toUpperCase() : 'Select Remark'}
               dropdownStyles={[styles.dropdownStyles]}
-              onSelect={() => console.log(selected)} 
+              onSelect={ onSelectRemark} 
               maxHeight={150}
               />
         </View>
@@ -288,12 +344,17 @@ export function Products(props){
                justifyContent:'space-between',
                marginBottom:6,
             }}>
-            <Text style={[
-                styles.boldText
-            ]}> 
-               Assessed Amt (&#8377;) 
-            </Text> 
-            <Text style={[styles.descriptionText]}> QTY: {props.qty } || GST: {props.gst} % </Text>
+            <View
+              
+            >
+
+              <Text style={[
+                  styles.boldText
+              ]}> 
+                Assessed Amt (&#8377;) 
+              </Text> 
+              <Text style={[styles.descriptionText]}> QTY: {props.qty } || GST: {props.gst} % </Text>
+            </View>
             <TextInput style={[
                 styles.TextInput
               ]}  
@@ -366,11 +427,12 @@ export const Services = (props) => {
       justifyContent:'space-between',
       marginBottom:6,
    }}>
-
+    <View>
       <Text style={[
          styles.boldText
          ]}> {props.product_info.product} Charges (&#8377;)</Text>
       <Text style={[styles.descriptionText]}> GST: {props.gst} % </Text>
+    </View>
       <TextInput  
         name={props.product_info.product} 
         // defaultValue={} 

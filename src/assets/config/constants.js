@@ -20,7 +20,7 @@ export const API_CONSTANTS = {
   editUser: "/api/edituser/",
   confirmOrder: "/api/confirmorder",
   contactUs: "/api/contact-us/primarykeytech",
-  forgotPassword: "/api/forgotpasswordmobile",
+  forgotPassword: "/api/forgot-password",
   addVisitor: "/api/checkUserByMobile",
   eventList: "/api/eventList",
   eventVenueList: "/api/eventVenueList",
@@ -41,6 +41,7 @@ export const API_CONSTANTS = {
     updateAssignedClaimStatus: '/api/update-assigned-claim-status',
     qustionAnswerList: '/api/question-answer-list',
     storeInspectionDetails: '/api/storeInspectionDetails',
+    updateAssessmentFormStepById: '/api/update-assessment-form-step-by-id',
 };
 
 export let userDetails = null;

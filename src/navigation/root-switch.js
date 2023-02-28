@@ -27,17 +27,22 @@ import UploadAssessmentImages from "../pages/UploadAssessmentImages";
 import Questionaire from "../pages/Questionaire";
 import UploadAccidentImages from "../pages/UploadAccidentImages";
 import Notifications from "../pages/Notifications";
+import ForgotPassword from "../pages/Authentication/ForgotPassword";
  function InProgress(props) {
-  return <InspectionList {...props} status="2" />
+  return <InspectionList {...props} type="" status="2" />
  }
  
  function NewInspection(props) {
-   return <InspectionList {...props} status="1" />
+   return <InspectionList {...props} type="claim"  status="1" />
   }
  
   function Completed(props) {
-   return <InspectionList {...props} status="4" />
+   return <InspectionList {...props} type=""  status="4" />
   }
+
+  function Additional(props) {
+    return <InspectionList {...props} type="additional"  status="1" />
+   }
 
 
 
@@ -59,7 +64,8 @@ const Router = () => (
     <Stack.Screen name="Upload Assessment Images" component={UploadAssessmentImages} />
     <Stack.Screen name="Questionaire" component={Questionaire} />
     <Stack.Screen name="Upload Accident Images" component={UploadAccidentImages} />
-    {/* <Stack.Screen name="Completed" component={Completed} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+    {/*
     <Stack.Screen name="New Inspection" component={NewInspection} /> */}
     <Stack.Screen
       name="Agent Inspection List"
@@ -166,7 +172,7 @@ const HomeTabs = () => {
         )
 
       }} />
-       <Tab.Screen name={'Additional Claim'} component={EventList} options={{
+       <Tab.Screen name={'Additional Claim'} component={Additional} options={{
         tabBarIcon: ({ focused }) => (
           <View style={styles.centerAligned}>
             <Icon name="list" type="MaterialCommunityIcons" size={focused ? 18 :15} style={{ ...styles.tabIcon, color: focused ? colors.WHITE : colors.BLACK }}></Icon>

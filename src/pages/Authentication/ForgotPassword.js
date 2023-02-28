@@ -1,6 +1,6 @@
-import { Container } from 'native-base';
+
 import * as React from 'react';
-import { View, Image, BackHandler, Linking, Text } from 'react-native';
+import { View, Image, BackHandler, Linking, Text, ToastAndroid } from 'react-native';
 import { API_CONSTANTS } from '../../assets/config/constants';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -25,24 +25,35 @@ export default class ForgotPassword extends React.Component {
     }
 
     state = {
-        mobile: '',
+        username: '',
         role: 'customer',
     }
 
     handleForgotPassword() {
-        if (this.utils.isStringEmpty(this.state.mobile)) {
-            // Toast.show('Please enter Mobile Number');
-        }
-        else{
-            const request = { mobile: this.state.mobile };
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        if(this.utils.isStringEmpty(this.state.username)){
+          ToastAndroid.show('PLease Enter Regsitered Email Address.', ToastAndroid.SHORT);
+        } else if (reg.test(this.state.username) === false) {
+            console.log('Invalid Email Address!')
+            ToastAndroid.show('Invalid Email Address!', ToastAndroid.SHORT);
+            return false;
+        
+        } else{
+            const request = { email: this.state.username };
             GLOBAL.loadingVisible.setState({ loading: true });
-            this.apiCtrl.callAxiosWithoutSession(API_CONSTANTS.forgotPassword, request).then(response => {
+            this.apiCtrl.callAxios(API_CONSTANTS.forgotPassword, request, false).then(response => {
                 console.log('Forgot Response', response.success, response.data.data);
                 console.log(response.data.status);
-                if (response.data.status == 'success') {
+                if (response.success == true) {
                     GLOBAL.loadingVisible.setState({ loading: false });
-                    // Toast.show('Reset password link has been sent to your registered E-mail address! Please check and reset your Password.');
-                    this.props.navigation.pop();
+                    ToastAndroid.show('Reset password link has been sent to your registered E-mail address! Please check and reset your Password.', ToastAndroid.LONG);
+
+                    // ToastAndroid.show('');
+                    // this.props.navigation.pop();
+                    setTimeout(()=>{
+                        this.props.navigation.navigate("Login") 
+                    }, 1500)
+
                 } else {
                     // Toast.show(response.data.message);
                     GLOBAL.loadingVisible.setState({ loading: false });
@@ -52,24 +63,28 @@ export default class ForgotPassword extends React.Component {
     }
 
     render() {
+        
+     
         return (
-            <Container>
-                <View style={{ height: '50%', backgroundColor: colors.WHITE }}>
+            <View style={{height: '100%'}}>
+                <View style={{ height: '30%', backgroundColor: colors.WHITE }}>
                     <Image resizeMode="contain" style={AuthStyles.logo} source={require(
                         // @ts-ignore
-                        '../../assets/images/logo1.png')} />
+                        '../../assets/images/ezclick.png')} />
                 </View>
                 <View style={AuthStyles.bottomContainer}>
-                    <Input
-                        lblName="Mobile Number"
-                        value={this.state.mobile}
-                        style={AuthStyles.inputBox}
-                        keyboardType={'numeric'}
-                        onChange={(text) => this.setState({ mobile: text })}
+                <Input
+                    lblName="Registered Email Address"
+                    value={this.state.username}
+                    style={AuthStyles.inputBox}
+                    // keyboardType={'numeric'}
+                    placeholder={'E.g. example@mail.com'}
+                    onChange={(text) => this.setState({ username: text })}
+          
                     />
                     <Button lblName="Submit" onChange={() => { this.handleForgotPassword() }} />
                 </View>
-            </Container>
+            </View>
         );
     }
 

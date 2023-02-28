@@ -132,7 +132,7 @@ const ClaimDetails = ({
                     setIsDisabled(false);
                   }
                 }
-                console.log(res.data, res.status);
+                // console.log(res.data, res.status);
               })
               .catch((err) => {
                 console.log(err, "error");
@@ -142,7 +142,7 @@ const ClaimDetails = ({
         
         // console.log(result)
       }
-      console.log(ClaimQuestions);
+      // console.log(ClaimQuestions);
      
     };
 
@@ -216,7 +216,7 @@ const ClaimDetails = ({
               )}
             </TouchableOpacity>
             <Text style={{ marginLeft: 10, color: colors.THEME }}>
-              {item.isChecked ? "Yes" : "No"}
+              {item.isChecked ? "No" : "Yes" }
             </Text>
             <Text style={{ marginLeft: 10, color: 'red' }}>{item.error}</Text>
           </View>
@@ -264,7 +264,6 @@ const ClaimDetails = ({
 
   const handleSubmit = () => {
     let errors = false;
-    console.log('hii')
     let newArray = [];
     ClaimQuestions.map((value, index)=>{
       if((value.isChecked == true) && ((value.imageUrl === "") || (value.imageUrl == null))){

@@ -240,7 +240,7 @@ export default class NewVehicleDetail extends React.Component {
                   Make:{" "}
                 </Text>
                 <Text style={{ fontSize: 16 }}>
-                  {this.state.details.vehicle_make}
+                  {this.state.details.vehicle_make_name}
                 </Text>
               </View>
               <View
@@ -259,7 +259,7 @@ export default class NewVehicleDetail extends React.Component {
                   Model:{" "}
                 </Text>
                 <Text style={{ fontSize: 16 }}>
-                  {this.state.details.vehicle_model}
+                  {this.state.details.vehicle_model_name}
                 </Text>
               </View>
               <View

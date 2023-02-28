@@ -29,8 +29,8 @@ import {
     const [Loading, setLoading] = useState(true);
     const [isDisabled, setIsDisabled] = useState(true);
 
-    const [Data, setData] = useState({});
-    const [tempData, setTempData] = useState({});
+    const [Data1, setData1] = useState({});
+    const [tempList, setTempList] = useState({});
 
     useEffect(()=>{
       
@@ -44,8 +44,8 @@ import {
           // console.log(data, "daaaa", status);
           if (status === 200 || status === 201) {
 
-            setData(data.data);
-            setTempData(data.data)
+            setData1(data.data);
+            setTempList(data.data)
           }
         setLoading(false);
       })
@@ -56,15 +56,14 @@ import {
   },[]);
 
 
-  const handleImageUploadCheck = (data) => {
-    var temp = tempData;
-    delete temp[`${data}`];
+  const handleImageUploadCheck = (d) => {
+    var t = tempList;
+    delete t[`${d}`];
 
-    setTempData(temp);
-  console.log(Object.keys(temp).length)
-    if(Object.keys(temp).length === 0){
-      ToastAndroid.show( `Estimation Updated Successfully!` , ToastAndroid.SHORT);
-      navigation.navigate("Questionaire",{claim_code: claim_code, assessment_id: assessment_id})
+    setTempList(t);
+  // console.log(Object.keys(t).length)
+  console.log('Data Key', d, 'temp', t,Data1)
+    if(Object.keys(t).length === 0){
       setIsDisabled(false)
     }
   }
@@ -87,7 +86,7 @@ import {
       
             {!Loading && (
               <>
-                {Object.entries(Data).map(([ind, val]) => {
+                {Object.entries(Data1).map(([ind, val]) => {
                   // console.log(ind, '>>>', val)
                   return (
                     <>
@@ -100,10 +99,11 @@ import {
         
             <TouchableOpacity
               disabled={isDisabled}
-              // onPress={() =>
-              //   navigation.navigate("Agent Inspection List", { claim_code, assessment_id })
-              //   // navigation.navigate("Upload Assessment Images", { claim_code, assessment_id })
-              // }
+              onPress={() =>
+                
+     { ToastAndroid.show( `Estimation Updated Successfully!` , ToastAndroid.SHORT),
+      navigation.navigate("Questionaire",{claim_code: claim_code, assessment_id: assessment_id})}
+              }
               style={{
                 marginHorizontal: 16,
                 marginVertical: 29,
@@ -194,7 +194,7 @@ import {
         id: props.id, 
         images: image, 
         assessment_id:props.assessment_id,
-        form_step:4, 
+        form_step:2, 
       },
       "POST",
       userDetails.access_token

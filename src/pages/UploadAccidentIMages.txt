@@ -9,23 +9,44 @@ import {
     Alert,
     ToastAndroid,
     Video,
+    Button,
     PermissionsAndroid,
   } from "react-native";
-  import React, { useEffect, useState } from "react";
+  import React, { useEffect, useState, useRef } from "react";
   import Header from "../components/Header";
   import { colors } from "../assets/config/colors";
   import * as ImagePicker from "expo-image-picker";
   import NewApiController from "../services/NewApiController";
   import { API_CONSTANTS, userDetails } from "../assets/config/constants";
   import  Icon  from "react-native-vector-icons/EvilIcons";
+  import { Camera } from 'expo-camera';
+  import * as MediaLibrary from 'expo-media-library';
 //   import Video from "react-native-video";
 
   const UploadAccidentImages = ({ navigation, route }) =>{
     // navigation.navigate('Upload Accident Images',{claim_code: claim_code, assessment_id: assessment_id});
+    
+    let cameraRef = useRef();
+    const [hasCameraPermission, setHasCameraPermission] = useState();
+    const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
+    const [photo, setPhoto] = useState();
+
     const [Loading, setLoading] = useState(true);
     const { claim_code, assessment_id } = route.params;
     const [photos, setPhotos] = useState([]);
     const [video, setVideo] = useState(null);
+    const [permission, setPermission] = useState(false);
+
+    let takePic = async () => {
+      let options = {
+          quality: 1,
+          base64: true,
+          exif: false,
+      };
+
+      let newPhoto = await cameraRef.current.takePictureAsync(options);
+      setPhoto(newPhoto);
+  }
 
     const RecordVideo = async () => {
     
@@ -100,7 +121,7 @@ import {
         }
       }
 
-      const uploadAccidentImage = (image, category) => {
+     const uploadAccidentImage = (image, category) => {
       console.log(userDetails.access_token + '  ', claim_code+'  ', image)
         NewApiController(
           API_CONSTANTS.uploadAccidentImage,
@@ -155,6 +176,55 @@ import {
           });
        
       }
+
+      const handlePermission = () => {
+        (async () => {
+            const cameraPermission = await Camera.requestCameraPermissionsAsync();
+            const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
+            setHasCameraPermission(cameraPermission.status === "granted");
+            setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+            setPermission(true);
+        })();
+    }
+
+    if(photo) {
+      let sharePic = () => {
+          shareAsync(photo.uri).then(() => {
+              setPhoto(undefined);
+          });
+      };
+
+      let savePhoto = () => {
+          MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+              setPhoto(undefined);
+          });
+      };
+      return(
+          <View style={[styles.container,{height:'100%',width:"100%"}]}>
+              <Image style={[{height:'90%',width:"100%"}]} source={{uri: "data:image/jpg;base64," + photo.base64}} />
+              <View style={[{ display:"flex", justifyContent:"center", flexDirection:"row",width:"100%"}]}>
+
+              <Button title="Share Photo" onPress={sharePic} />
+              {hasMediaLibraryPermission? <Button title="Save Photo" onPress={savePhoto} /> : undefined }
+              <Button title="Discard" onPress={() => setPhoto(undefined)} />
+              </View>
+          </View>
+      );
+  }
+
+      if(permission) {
+
+        return (
+            <View style={[{width:"100%",height:"100%", objectFit:'contain',position:"absolute", zIndex: 9999, zIndex:99}]}>
+                <Camera style={[styles.container, {height:'100%',}]} ref={cameraRef}>
+                    <View style={[styles.buttonContainer, {position:"absolute",left:0,display:"flex", flexDirection:"row", justifyContent:"center",bottom:0, right:0}]}>
+                        <Button title="Take Pic" onPress={takePic} style={[{width:700,alignSelf:"stretch",}]}><Text  style={[{width:700,alignSelf:"stretch",}]}>Take Pic</Text></Button>
+                        <Button title="Discard" onPress={() =>  setPermission(false)} />
+                    </View>
+                </Camera>
+            </View>
+        )
+}
     return(
   
            <View>
@@ -242,6 +312,25 @@ import {
                                 borderRadius: 5,
                             }} >
                             <Text style={{ color: colors.WHITE }}>Complete Inspection</Text>
+                        </TouchableOpacity >
+
+                        <TouchableOpacity 
+                            
+                            onPress={
+                              handlePermission()
+                            }
+                            style={{
+                                
+                                backgroundColor: colors.THEME,
+                                height: 48,
+                                width: "80%",
+                                marginTop:10,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "center",
+                                borderRadius: 5,
+                            }} >
+                            <Text style={{ color: colors.WHITE }}>Camera</Text>
                         </TouchableOpacity >
 
                         <View style={{height:50}}></View>

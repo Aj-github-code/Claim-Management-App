@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, ToastAndroid, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import NewApiController from "../services/NewApiController";
 import { API_CONSTANTS, userDetails } from "../assets/config/constants";
@@ -19,7 +19,7 @@ const LabelText = ({ label, value }) => (
     {label} : <Text>{value}</Text>
   </Text>
 );
-const ClaimFormDetails = ({ route, navigation }) => {
+const ClaimFormDetails = ({ route, navigation}) => {
   const { claim_code, assessment_id } = route.params;
   const [ClaimData, setClaimData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,7 @@ const ClaimFormDetails = ({ route, navigation }) => {
   const [
     isStartInvestigationButtonPressed,
     setIsStartInvestigationButtonPressed,
-  ] = useState(false);
+  ] = useState(route.params.claimForm);
   const formateDate = (date, isTimeToBeDisplayed = false) => {
     let dates;
     if((date !== null) && (date !== '')){
@@ -78,6 +78,7 @@ const ClaimFormDetails = ({ route, navigation }) => {
       .then(({ data, status }) => {
         if (status === 200 || status === 201) {
           setClaimData(data.data);
+          console.log('Response Claim Details', data.data)
         }
         setLoading(false);
       })
@@ -89,6 +90,39 @@ const ClaimFormDetails = ({ route, navigation }) => {
 
   }, [])
 
+  const rejectInspection = () => {
+    Alert.alert(
+      'Reject Inspection',
+      "These Changes won't be reverted!", // <- this part is optional, you can pass an empty string
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          NewApiController(
+            API_CONSTANTS.updateAssignedClaimStatus,
+            {
+              claim_code: claim_code,
+              status: 3
+            },
+            "POST",
+            userDetails.access_token
+          )
+            .then(({ data, status }) => {
+              setLoading(false);
+              ToastAndroid.show(`Inspection Reject` , ToastAndroid.SHORT)
+              
+              setTimeout(()=>{navigation.navigate('Dashboard')},1500)
+            })
+            .catch((err) => {
+              setLoading(false);
+              console.log(err, "Error from claim form details screen");
+            })
+        
+        }},
+      ],
+      {cancelable: false},
+    );
+   
+  }
 
   return (
     <>
@@ -152,6 +186,26 @@ const ClaimFormDetails = ({ route, navigation }) => {
               }}
             >
               <Text style={{ color: colors.WHITE }}>Start Inspection</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                {
+                  rejectInspection()
+                }
+              }
+              style={{
+                // marginHorizontal: 5,
+                marginVertical: 5,
+                backgroundColor: colors.THEME,
+                height: 48,
+                width: "80%",
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: colors.WHITE }}>Reject Inspection</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -44,8 +44,11 @@ import {
           console.log('res')
           if (status === 200 || status === 201) {
             console.log(data.data, "daaaa", status);
-            setData(data.data);
-            setTempData(data.data)
+            if((data.data != null) && (typeof data.data !== 'undefined')){
+
+              setData(data.data);
+              setTempData(data.data)
+            }
             // console.log('On Start', 'Count', Object.keys(Data).length, 'Loading', Loading)
             setLoading(false);
           }
@@ -115,57 +118,85 @@ import {
               {
                 ((Data != null) && (typeof Data !== 'undefined')) && 
                 (Object.keys(Data).length > 0) ?
-            
-                (Object.entries(Data).map(([ind, val]) => {
-                  // console.log('Max',(range*page))
-                  if(((range*page) > ind) && ( (range*(page-1)) <= ind )){
+                <>
+                  {(Object.entries(Data).map(([ind, val]) => {
+                    // console.log('Max',(range*page))
+                    if(((range*page) > ind) && ( (range*(page-1)) <= ind )){
 
-                    return (
-                      <QNA 
-                        {...val} 
-                        claim_code={claim_code}
-                        key={ind}   
-                        unique_id={ind}
-                        // assessment_id={assessment_id} 
-                        removepoint={handleRemovePoint} 
-                      />
-                    );
+                      return (
+                        <QNA 
+                          {...val} 
+                          claim_code={claim_code}
+                          key={ind}   
+                          unique_id={ind}
+                          // assessment_id={assessment_id} 
+                          removepoint={handleRemovePoint} 
+                        />
+                      );
+                    }
+                    
+                }))}
+                <TouchableOpacity
+                  onPress={() =>
+                    {
+                      handleNextPage()
+                    
+                    } 
                   }
-                  
-              }))
+                  style={{
+                    marginHorizontal: 16,
+                    marginVertical: 29,
+                    backgroundColor: colors.THEME,
+                    height: 50,
+                    width: "90%",
+                    // position:'absolute',
+                    // bottom:20,
+                    
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: colors.WHITE }}>Next</Text>
+                </TouchableOpacity>
+                <View style={{height:100}}></View>
+               </>
               :
               
-              skipPage()
+              <>
+              <ListEmptyComponent text="No Checkup points for this vehicle type" />
+              <TouchableOpacity
+              onPress={() =>
+                {
+                  skipPage()
+                
+                } 
+              }
+              style={{
+                marginHorizontal: 16,
+                marginVertical: 29,
+                backgroundColor: colors.THEME,
+                height: 50,
+                width: "90%",
+                // position:'absolute',
+                // bottom:20,
+                
+                justifyContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: colors.WHITE }}>Next</Text>
+            </TouchableOpacity>
+              </>
                 
               
             }
             </>
           )} 
-          <TouchableOpacity
-            onPress={() =>
-              {
-                handleNextPage()
-               
-              } 
-            }
-            style={{
-              marginHorizontal: 16,
-              marginVertical: 29,
-              backgroundColor: colors.THEME,
-              height: 50,
-              width: "90%",
-              // position:'absolute',
-              // bottom:20,
-              
-              justifyContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: colors.WHITE }}>Next</Text>
-          </TouchableOpacity>
-            <View style={{height:100}}></View>
+     
           </ScrollView>
        </View>
       </>
@@ -185,10 +216,12 @@ import {
     const radioClick = (id, answers) => {
       setRadioSelected(id)
       // setAnswer(answers)
-      if(answers !== 'Safe'){
-        openCamera(answers)
-      }
-      removepoint(unique_id)
+      openCamera(answers)
+      // if(answers !== 'Safe'){
+      // } else {
+      //   submit(answers, '');
+      // }
+      // removepoint(unique_id)
       console.log(answers);
     }
 
@@ -202,14 +235,18 @@ import {
   };
 
   const submit = (answer, image) => {
-    var data = {inspection_details: { 
+    var data = {  
+                inspection_details: { 
                   0:{
                     claim_code: claim_code,
                     image: image,
                     damage: answer,
                     category: question
 
-                  }}}
+                  }
+                },
+                form_step:3
+              }
                   console.log(data)
     NewApiController(
       API_CONSTANTS.storeInspectionDetails,
@@ -220,9 +257,9 @@ import {
       .then(({ data, status }) => {
         console.log('res', data, 'Status', status)
         if (status === 200 || status === 201) {
+          removepoint(unique_id)
           console.log(data.data, "daaaa", status);
           ToastAndroid.show( `${question} Inspection Completed!` , ToastAndroid.SHORT);
-          removepoint(unique_id)
           // console.log('On Start', 'Count', Object.keys(Data).length, 'Loading', Loading)
           // setLoading(false);
         } 

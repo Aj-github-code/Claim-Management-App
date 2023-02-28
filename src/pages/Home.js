@@ -76,12 +76,13 @@ export default class Home extends Component {
 
   getDashboardDetails(){
     this.apiCtrl.callAxios(API_CONSTANTS.dashboardList, {filter: 'claim'}).then((response)=>{
-      // console.log("respnse", response.data.data)
-      if(response.success === true){
+      console.log("respnse Dashboard", response)
+      if(response.success == true){
         this.setState({dashboardCount:{ 
           new:response.data.data.new_claim[0].StatusCount,
           inProgress:response.data.data.pending_claim[0].StatusCount,
           completed:response.data.data.completed_claim[0].StatusCount,
+          additional:response.data.data.additional_claim[0].StatusCount,
         }})
       }
     })
@@ -132,7 +133,7 @@ export default class Home extends Component {
 
             <Image  style={[{width:89, alignSelf:"center", marginTop:18, height:89.3}]} source={require('../assets/images/group-5434.png')} />
 
-            <Text style={[{fontSize:50, color: colors.THEME, marginTop:20}]}>
+                  <Text style={[{fontSize:50, color: colors.THEME, marginTop:5, marginBottom: 70}]}>
             {this.state.dashboardCount.new?this.state.dashboardCount.new:0}
             </Text>
             <Text  adjustsFontSizeToFit style={[styles.title]}>
@@ -142,7 +143,7 @@ export default class Home extends Component {
         </TouchableOpacity>
         <TouchableOpacity style={[styles.card, styles.elevation]} onPress={() => this.props.navigation.navigate("Inprogress")}>
             <Image style={[{width:89, alignSelf:"center", marginTop:18, height:89.3}]} source={require('../assets/images/group-5432.png')} />
-            <Text style={[{fontSize:50, color: colors.THEME, marginTop:20}]}>
+                  <Text style={[{fontSize:50, color: colors.THEME, marginTop:5, marginBottom: 70}]}>
             {this.state.dashboardCount.inProgress?this.state.dashboardCount.inProgress:0}
             </Text>
             <Text style={[styles.title]}>
@@ -152,7 +153,7 @@ export default class Home extends Component {
         </TouchableOpacity>
         <TouchableOpacity style={[styles.card, styles.elevation]} onPress={() => this.props.navigation.navigate("Completed")}>
             <Image style={[{width:89, alignSelf:"center", marginTop:18, height:89.3}]} source={require('../assets/images/group-5431.png')} />
-            <Text style={[{fontSize:50, color: colors.THEME, marginTop:20}]}>
+            <Text style={[{fontSize:50, color: colors.THEME, marginTop:5, marginBottom: 70}]}>
             {this.state.dashboardCount.completed?this.state.dashboardCount.completed:0}
             </Text>
             <Text style={[styles.title]}>
@@ -164,7 +165,10 @@ export default class Home extends Component {
     
             <Image style={[{width:89, alignSelf:"center", marginTop:18, height:89.3}]} source={require('../assets/images/group-5435.png')} />
             <Icon name={"user"} color={'white'}  light size={45} style={[{position:'absolute', alignSelf:"center",top:40, zIndex: 99}]} />
-            <Text style={[{fontSize:50, color: colors.THEME, marginTop:20}]}>0</Text>
+                  <Text style={[{fontSize:50, color: colors.THEME, marginTop:5, marginBottom: 70}]}>
+            {this.state.dashboardCount.additional?this.state.dashboardCount.additional:0}
+
+            </Text>
             <Text style={[styles.title]}>
             Additional Claim
             </Text>
@@ -186,8 +190,8 @@ const styles = StyleSheet.create({
     card: {
       backgroundColor: 'white',
       borderRadius: 8,
-    //   paddingVertical: 10,
-    alignItems:"center",
+      //   paddingVertical: 10,
+      alignItems:"center",
       alignSelf: "flex-start",
       textAlign: "center",
       // paddingHorizontal: 25,
@@ -213,8 +217,10 @@ const styles = StyleSheet.create({
       textAlign: "center",
       // marginTop: "-20%",
     //   flex: 3,
+    position:'absolute',
       fontWeight: '700',
       marginBottom:20,
+      bottom: 2
 
     },   
      icon: {

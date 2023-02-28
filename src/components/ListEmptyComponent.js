@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Text, StyleSheet, View } from 'react-native';
 
-const ListEmptyComponent = () => {
+const ListEmptyComponent = ({text= 'No Records'}) => {
 
     return(
         <>
         <View style={[styles.container]}>
             <View style={[styles.row]}>
                 <View style={[styles.details]}>
-                    <Text style={{ fontWeight:'bold', fontSize:14,}}>No Records</Text>
+                    <Text style={{ fontWeight:'bold', fontSize:14,}}>{text}</Text>
                 </View>
             </View>
         </View>

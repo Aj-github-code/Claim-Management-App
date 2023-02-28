@@ -48,12 +48,11 @@ export default class InspectionList extends React.Component{
         // this.getOrderList("-1", this.state.startDate, this.state.endDate, this.state.pageStart)
       }
 
-    getInspectionList(pageLength){
-  
+    getInspectionList(pageLength){  
         GLOBAL.loadingVisible.setState({ loading: true });
        if(this.state.totalRecords >= this.state.pageLength){
-        this.apiCtrl.callAxios(API_CONSTANTS.claimList, {   length: pageLength, status:this.props.status }).then(response => {
-            // console.log('Responses', response);
+        this.apiCtrl.callAxios(API_CONSTANTS.claimList, {   length: pageLength, status:this.props.status, claim_type:this.props.type }).then(response => {
+            console.log('Responses', response);
             // this.setState({ loading: false })
             if (response.data.aaData) {
 
@@ -63,10 +62,10 @@ export default class InspectionList extends React.Component{
                     finalClaimList.push(item)
                 })
                 GLOBAL.loadingVisible.setState({ loading: false });
-                console.log('loading false')
+                //console.log('loading false')
                 this.setState({ pageLength: pageLength});
                 this.setState({ totalRecords: response.data.iTotalRecords});
-                this.setState({ claimLists: finalClaimList.reverse() });
+                this.setState({ claimLists: finalClaimList });
             } else {
                 GLOBAL.loadingVisible.setState({ loading: false });
             //show popup
@@ -102,8 +101,6 @@ export default class InspectionList extends React.Component{
            var x = moment(date);
            var y = moment();
 
-           console.log('Date1 '+ date + ' , '+ x)
-           console.log('Date2 '+ y)
            let seconds = y.diff(x)/1000;
           //  console.log("seconds: "+seconds)
            seconds = Number(seconds);
@@ -138,7 +135,37 @@ export default class InspectionList extends React.Component{
            return dDisplay + hDisplay + mDisplay + sDisplay;
        }
 
-       console.log('Naviagtion', this.props)
+       const handleClick = (data) => {
+
+        console.log('Handle Click: ',data)
+        console.log(this.props.status)
+        switch (this.props.status){
+          case '1':
+            this.props.navigation.navigate("New Vehicle Detail",{params:data}) 
+            break
+          case '2':
+            switch (data.assessment_form_step){
+              case 1:
+              this.props.navigation.navigate("Upload Assessment Images", { claim_code: data.claim_code, assessment_id: data.assessment_id })
+              break;
+              case 2:
+                this.props.navigation.navigate("Questionaire",{claim_code: data.claim_code, assessment_id: data.assessment_id})
+                break;
+              case 3:
+                this.props.navigation.navigate("Upload Accident Images",{claim_code: data.claim_code, assessment_id: data.assessment_id})
+                break;
+              default:
+                if(data.accident_reported_to_police === 0 && data.punchnama_carried_out === 0 && data.injury_to_driver_occupant === 0 && data.third_party_involved_in_accident === 0 && data.particulars_of_third_party_injury_loss === 0){
+                  this.props.navigation.navigate("Claim Form Details",{claimForm:true, claim_code: data.claim_code, assessment_id: data.assessment_id}) 
+                } else {
+                  // navigation.navigate("Agent Inspection List", { claim_code, assessment_id })
+                  this.props.navigation.navigate("Agent Inspection List",{ claim_code: data.claim_code, assessment_id: data.assessment_id})
+                }
+              break;
+            }
+        }
+       }
+      //  console.log('Naviagtion', this.props)
   return (
     <View style={[styles.container]}>
         <Header goBack={() => { this.props.navigation.navigate('Dashboard') }}  
@@ -155,7 +182,7 @@ export default class InspectionList extends React.Component{
           data={this.state.claimLists}
           renderItem={(item ,key) => {   
             return (
-              <TouchableOpacity style={[styles.row]} title="View Profile" onPress= {()=>  this.props.navigation.navigate("New Vehicle Detail",{params:item.item})}>
+              <TouchableOpacity style={[styles.row]} title="View Profile" onPress= {()=> handleClick(item.item) }>
                 <View style={[styles.details]}>
                   <View style={[{display:"flex",flexDirection:"row",marginBottom:5, width:'50%'}]}> 
                     <Text style={{ width:80, fontWeight:'bold', fontSize:14}}>Claim No</Text> 
@@ -208,7 +235,7 @@ export default class InspectionList extends React.Component{
             )
           }}
           keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={ListEmptyComponent()}
+          ListEmptyComponent={<ListEmptyComponent />}
           showsVerticalScrollIndicator={false}
           refreshing={this.state.refreshing}
           onRefresh={this.handleRefreshFromTop}

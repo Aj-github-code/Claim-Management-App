@@ -14,6 +14,7 @@ import AppText from '../../components/AppText';
 import { colors } from '../../assets/config/colors';
 import { getFontStyles } from '../../services/utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Pressable } from 'react-native';
 
 // import ToastAndroid from 'react-native-ToastAndroid-message';
 export default class Login extends React.Component {
@@ -128,6 +129,7 @@ export default class Login extends React.Component {
   // }
 
 
+
   render() {
  
 
@@ -162,9 +164,9 @@ export default class Login extends React.Component {
             onShowPassword={() => { this.setState({ hidePassword: !this.state.hidePassword }) }}
           />
           <View style={{ alignItems: "flex-end", marginTop: 5, marginBottom: 5,}}>
-            <TouchableOpacity onPress={ ()=> this.props.navigation.push('ForgotPassword') }>
+            <Pressable onPress={() => {    this.props.navigation.navigate('ForgotPassword') }}>
               <Text style={[{ textDecorationLine: 'underline', color:"blue", fontWeight:"bold"}]}>Forgot Password?</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <Button lblName="Login" style={{backgroundColor: colors.THEME}} onChange={() => { this.handleLogin() }} />
           {/* <LinearGradient colors={['#0D754E','#5E9C5C','#A3C26C','#EDE683']} style={{paddingVertical:10,borderRadius:10,marginTop:20}}>
